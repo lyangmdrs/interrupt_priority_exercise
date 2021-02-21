@@ -23,6 +23,9 @@
 #define IRQNO_TIMER2 28
 #define IRQNO_I2C1   31
 
+#define LOWEST_PRIORITY  0XF0
+#define HIGHEST_PRIORITY 0X00
+
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
@@ -48,6 +51,10 @@ void configure_priority_for_irqs(uint8_t irq_number, uint8_t priority_value)
 int main(void)
 {
     printf("Interrupt Priority Exercise\n");
+
+    // Configure the priorities for the peripherals
+    configure_priority_for_irqs(IRQNO_TIMER2, 0x80);
+    configure_priority_for_irqs(IRQNO_I2C1, 0x80);
 
 	/* Loop forever */
 	for(;;);
