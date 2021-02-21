@@ -31,6 +31,20 @@ uint32_t *pNVIC_IserBase = (unit32_t*) 0xE000E100; // Initial address for Interr
 uint32_t *pNVIC_IsprBase = (unit32_t*) 0xE000E200; // Initial address for Interrupt Set-pending Registers
 uint32_t *pNVIC_IprBase  = (unit32_t*) 0xE000E400; // Initial address for Interrupt Priority Registers
 
+void configure_priority_for_irqs(uint8_t irq_number, uint8_t priority_value)
+{
+	// Finds in which IPR are located the target IRQ
+	uint8_t irpx = irq_number / 4;
+	uint32_t *ipr = pNVIC_IprBase + irpx;
+
+	// Finds the position of IRQ on calculated IRP
+	uint8_t irq_position = (irq_number % 4) * 8;
+
+	// Configures the priority
+	*ipr &= ~(0xFF << irq_position); // Clears the priority field
+	*ipr |= (priority_value << irq_position); // Writes the priority value in priority field
+}
+
 int main(void)
 {
     printf("Interrupt Priority Exercise\n");
