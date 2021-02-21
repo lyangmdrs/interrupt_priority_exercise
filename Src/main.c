@@ -52,3 +52,13 @@ int main(void)
 	/* Loop forever */
 	for(;;);
 }
+
+void TIM2_IRQHandler(void)
+{
+	printf("{TIM2_IRQHandler}\n");
+}
+
+void I2C1_EV_IRQHandler(void)
+{
+	printf("{I2C1_EV_IRQHandler}\n");
+}
