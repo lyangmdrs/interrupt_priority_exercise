@@ -20,6 +20,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#define IRQNO_TIMER2 28
+#define IRQNO_I2C1   31
+
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
