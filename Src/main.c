@@ -56,6 +56,13 @@ int main(void)
     configure_priority_for_irqs(IRQNO_TIMER2, 0x80);
     configure_priority_for_irqs(IRQNO_I2C1, 0x80);
 
+    // Pends the interruption for one of the configured peripherals
+    *pNVIC_IsprBase |= ( 1 << IRQNO_TIMER2);
+
+    // Enables the IRQs
+    *pNVIC_IserBase |= ( 1 << IRQNO_I2C1);
+    *pNVIC_IserBase |= ( 1 << IRQNO_TIMER2);
+
 	/* Loop forever */
 	for(;;);
 }
