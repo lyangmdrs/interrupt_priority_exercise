@@ -24,6 +24,10 @@
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+uint32_t *pNVIC_IserBase = (unit32_t*) 0xE000E100; // Initial address for Interrupt Set-enable Registers
+uint32_t *pNVIC_IsprBase = (unit32_t*) 0xE000E200; // Initial address for Interrupt Set-pending Registers
+uint32_t *pNVIC_IprBase  = (unit32_t*) 0xE000E400; // Initial address for Interrupt Priority Registers
+
 int main(void)
 {
     printf("Interrupt Priority Exercise\n");
