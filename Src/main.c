@@ -54,7 +54,7 @@ int main(void)
 
     // Configure the priorities for the peripherals
     configure_priority_for_irqs(IRQNO_TIMER2, 0x80);
-    configure_priority_for_irqs(IRQNO_I2C1, 0x80);
+    configure_priority_for_irqs(IRQNO_I2C1, 0x70);
 
     // Pends the interruption for one of the configured peripherals
     *pNVIC_IsprBase |= ( 1 << IRQNO_TIMER2);
