@@ -30,9 +30,9 @@
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-uint32_t *pNVIC_IserBase = (unit32_t*) 0xE000E100; // Initial address for Interrupt Set-enable Registers
-uint32_t *pNVIC_IsprBase = (unit32_t*) 0xE000E200; // Initial address for Interrupt Set-pending Registers
-uint32_t *pNVIC_IprBase  = (unit32_t*) 0xE000E400; // Initial address for Interrupt Priority Registers
+uint32_t *pNVIC_IserBase = (uint32_t*) 0xE000E100; // Initial address for Interrupt Set-enable Registers
+uint32_t *pNVIC_IsprBase = (uint32_t*) 0xE000E200; // Initial address for Interrupt Set-pending Registers
+uint32_t *pNVIC_IprBase  = (uint32_t*) 0xE000E400; // Initial address for Interrupt Priority Registers
 
 void configure_priority_for_irqs(uint8_t irq_number, uint8_t priority_value)
 {
@@ -63,13 +63,19 @@ int main(void)
     *pNVIC_IserBase |= ( 1 << IRQNO_I2C1);
     *pNVIC_IserBase |= ( 1 << IRQNO_TIMER2);
 
-	/* Loop forever */
+	// Loop forever
 	for(;;);
 }
 
 void TIM2_IRQHandler(void)
 {
 	printf("{TIM2_IRQHandler}\n");
+
+	// Pends the interruption for the other configured peripheral
+	*pNVIC_IsprBase |= ( 1 << IRQNO_I2C1);
+
+	// Loop forever
+	for(;;);
 }
 
 void I2C1_EV_IRQHandler(void)
