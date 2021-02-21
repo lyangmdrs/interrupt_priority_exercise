@@ -18,13 +18,67 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
+
+#define IRQNO_TIMER2 28
+#define IRQNO_I2C1   31
+
+#define LOWEST_PRIORITY  0XF0
+#define HIGHEST_PRIORITY 0X00
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+uint32_t *pNVIC_IserBase = (uint32_t*) 0xE000E100; // Initial address for Interrupt Set-enable Registers
+uint32_t *pNVIC_IsprBase = (uint32_t*) 0xE000E200; // Initial address for Interrupt Set-pending Registers
+uint32_t *pNVIC_IprBase  = (uint32_t*) 0xE000E400; // Initial address for Interrupt Priority Registers
+
+void configure_priority_for_irqs(uint8_t irq_number, uint8_t priority_value)
+{
+	// Finds in which IPR are located the target IRQ
+	uint8_t irpx = irq_number / 4;
+	uint32_t *ipr = pNVIC_IprBase + irpx;
+
+	// Finds the position of IRQ on calculated IRP
+	uint8_t irq_position = (irq_number % 4) * 8;
+
+	// Configures the priority
+	*ipr &= ~(0xFF << irq_position); // Clears the priority field
+	*ipr |= (priority_value << irq_position); // Writes the priority value in priority field
+}
+
 int main(void)
 {
-    /* Loop forever */
+    printf("Interrupt Priority Exercise\n");
+
+    // Configure the priorities for the peripherals
+    configure_priority_for_irqs(IRQNO_TIMER2, 0x80);
+    configure_priority_for_irqs(IRQNO_I2C1, 0x70);
+
+    // Pends the interruption for one of the configured peripherals
+    *pNVIC_IsprBase |= ( 1 << IRQNO_TIMER2);
+
+    // Enables the IRQs
+    *pNVIC_IserBase |= ( 1 << IRQNO_I2C1);
+    *pNVIC_IserBase |= ( 1 << IRQNO_TIMER2);
+
+	// Loop forever
 	for(;;);
+}
+
+void TIM2_IRQHandler(void)
+{
+	printf("{TIM2_IRQHandler}\n");
+
+	// Pends the interruption for the other configured peripheral
+	*pNVIC_IsprBase |= ( 1 << IRQNO_I2C1);
+
+	// Loop forever
+	for(;;);
+}
+
+void I2C1_EV_IRQHandler(void)
+{
+	printf("{I2C1_EV_IRQHandler}\n");
 }
