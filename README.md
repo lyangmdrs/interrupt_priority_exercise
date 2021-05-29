@@ -1,7 +1,7 @@
 ![header](https://github.com/lyangmdrs/interrupt_priority_exercise/blob/develop/Img/header.png)
 
 ***
-# Interrupt Priority
+# Interruption Priority
 
 The goal of this exercise is to learn how to configure different priorities for peripherals interruptions. 
 
